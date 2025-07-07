@@ -7,4 +7,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: echo 'Hello World'
+      # シークレットの存在確認
+      - name: Check if secrets are available
+        run: |
+          echo "=== シークレットの確認 ==="
+          
+          # GITHUB_TOKENは常に存在
+          if [ ! -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "✅ GITHUB_TOKEN: 存在します"
+          fi
+          
+          # カスタムシークレットの確認
+          if [ ! -z "${{ secrets.MY_SECRET }}" ]; then
+            echo "✅ MY_SECRET: 存在します"
+            # 最初の3文字だけ表示（安全のため）
+            echo "   最初の3文字: $(echo '${{ secrets.MY_SECRET }}' | cut -c1-3)***"
+          else
+            echo "❌ MY_SECRET: 設定されていません"
+          fi
+          
+          if [ ! -z "${{ secrets.API_KEY }}" ]; then
+            echo "✅ API_KEY: 存在します"
+            echo "   文字数: $(echo -n '${{ secrets.API_KEY }}' | wc -c)"
+          else
+            echo "❌ API_KEY: 設定されていません"
+          fi
+          
+          if [ ! -z "${{ secrets.DATABASE_URL }}" ]; then
+            echo "✅ DATABASE_URL: 存在します"
+          else
+            echo "❌ DATABASE_URL: 設定されていません"
+          fi
       
